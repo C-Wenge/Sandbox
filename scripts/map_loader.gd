@@ -641,6 +641,11 @@ func _thread_run() -> void:
 			if ResourceLoader.exists("user://map/%s"%_get_block_file_name(block_coords)):
 
 				block_data = load("user://map/%s"%_get_block_file_name(block_coords))
+
+				# 如果加载的数据区块大小和当前不一样就发出警告
+				if block_data.block_size != _block_size:
+					push_warning("加载的区块大小不符！")
+
 				_data_mutex.lock()
 				_blocks_data[block_coords] = block_data
 				_data_mutex.unlock()
