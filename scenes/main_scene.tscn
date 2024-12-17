@@ -1,0 +1,131 @@
+[gd_scene load_steps=11 format=3 uid="uid://cekkt5n6qhfw0"]
+
+[ext_resource type="Script" uid="uid://b6cnjwuroxmn6" path="res://scenes/main_scene.gd" id="1_e1633"]
+[ext_resource type="Script" uid="uid://b10r008um2ibm" path="res://scripts/map_loader.gd" id="1_v0c7k"]
+[ext_resource type="TileSet" uid="uid://dy1nypwbt8mye" path="res://assets/tile_sets/tile_set.tres" id="2_tbypy"]
+[ext_resource type="Script" uid="uid://bgslrau3qg01a" path="res://scripts/main_camera.gd" id="3_m5ka5"]
+[ext_resource type="PackedScene" uid="uid://sqjhg6q65unh" path="res://modules/enemy.tscn" id="4_inr4f"]
+[ext_resource type="PackedScene" uid="uid://d34wbw00crsqs" path="res://modules/player.tscn" id="6_c0ggf"]
+[ext_resource type="FontFile" uid="uid://dti01c1qmahf1" path="res://assets/fonts/vonwaon_bitmap-12px.ttf" id="7_dy848"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_kh0rw"]
+frequency = 0.003
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_tba6x"]
+seed = 1
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_b36bx"]
+seed = 2
+frequency = 0.005
+
+[node name="MainScene" type="Node2D"]
+script = ExtResource("1_e1633")
+
+[node name="MapLoader" type="Node2D" parent="." node_paths=PackedStringArray("_world", "_block_parent")]
+script = ExtResource("1_v0c7k")
+_world = NodePath("../World")
+_block_parent = NodePath("../World/Blocks")
+_tile_set = ExtResource("2_tbypy")
+_load_range = 6
+_type_noise = SubResource("FastNoiseLite_kh0rw")
+_grass_noise = SubResource("FastNoiseLite_tba6x")
+_tree_noise = SubResource("FastNoiseLite_b36bx")
+_layer_count = 6
+_sort_layers = Array[int]([5])
+_enemy_packed = ExtResource("4_inr4f")
+
+[node name="World" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Player" parent="World" instance=ExtResource("6_c0ggf")]
+y_sort_enabled = true
+
+[node name="MainCamera" type="Camera2D" parent="World/Player"]
+script = ExtResource("3_m5ka5")
+
+[node name="Blocks" type="Node2D" parent="World"]
+y_sort_enabled = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 10.0
+offset_top = -100.0
+offset_right = 90.0
+offset_bottom = 100.0
+grow_vertical = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("7_dy848")
+theme_override_font_sizes/font_size = 4
+text = "W，A，S，D移动"
+
+[node name="Label2" type="Label" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("7_dy848")
+theme_override_font_sizes/font_size = 4
+text = "鼠标滚轮控制放大缩小"
+
+[node name="Label3" type="Label" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("7_dy848")
+theme_override_font_sizes/font_size = 4
+text = "鼠标左键绘制右键擦除"
+
+[node name="Label4" type="Label" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("7_dy848")
+theme_override_font_sizes/font_size = 4
+text = "Q键记录当前位置，
+在按E键计算一条从开始到当前的路线"
+
+[node name="Label5" type="Label" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("7_dy848")
+theme_override_font_sizes/font_size = 4
+text = "R键切换绘制的类型"
+
+[node name="TileType" type="Label" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("7_dy848")
+theme_override_font_sizes/font_size = 4
+text = "当前绘制类型："
+
+[node name="Layer" type="Label" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("7_dy848")
+theme_override_font_sizes/font_size = 4
+text = "当前绘制的层："
+
+[node name="Background" type="ColorRect" parent="CanvasLayer"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.129464, 0.129464, 0.129464, 1)
+
+[node name="Label" type="Label" parent="CanvasLayer/Background"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -30.0
+offset_top = -6.0
+offset_right = 30.0
+offset_bottom = 6.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("7_dy848")
+theme_override_font_sizes/font_size = 12
+text = "加载中..."

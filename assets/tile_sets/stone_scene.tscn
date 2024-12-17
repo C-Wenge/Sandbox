@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://b3wbbi8chmxre"]
+
+[ext_resource type="Texture2D" uid="uid://cwivpgsvtynip" path="res://assets/tile_sets/stone.png" id="1_34fnn"]
+[ext_resource type="Script" uid="uid://cdghfj5qq5q3o" path="res://scripts/astar_agent.gd" id="2_pnwpi"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_k7ewq"]
+radius = 8.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ma8yo"]
+
+[node name="StoneScene" type="StaticBody2D"]
+texture_filter = 1
+collision_layer = 4
+collision_mask = 3
+
+[node name="Stone" type="Sprite2D" parent="."]
+position = Vector2(0, -1.84)
+texture = ExtResource("1_34fnn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 3.26)
+shape = SubResource("CircleShape2D_k7ewq")
+
+[node name="AStarAgent" type="Node2D" parent="."]
+script = ExtResource("2_pnwpi")
+shape = SubResource("CircleShape2D_ma8yo")

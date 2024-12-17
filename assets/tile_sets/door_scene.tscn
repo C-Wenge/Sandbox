@@ -1,0 +1,45 @@
+[gd_scene load_steps=8 format=3 uid="uid://d2wkyy0nje3q1"]
+
+[ext_resource type="Script" uid="uid://bounymcxe3lm4" path="res://assets/tile_sets/door_scene.gd" id="1_36xr3"]
+[ext_resource type="Texture2D" uid="uid://bv8ixoao5sas" path="res://assets/door.png" id="1_hpnnb"]
+[ext_resource type="Shader" uid="uid://cdybycue1n2cj" path="res://shaders/door_focus.gdshader" id="2_073di"]
+[ext_resource type="Script" uid="uid://cdghfj5qq5q3o" path="res://scripts/astar_agent.gd" id="4_k51fu"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nfmdl"]
+resource_local_to_scene = true
+shader = ExtResource("2_073di")
+shader_parameter/focus = 0.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6h2yr"]
+size = Vector2(16, 4)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vwo6y"]
+radius = 30.0
+
+[node name="DoorScene" type="StaticBody2D"]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1_36xr3")
+
+[node name="Door" type="Sprite2D" parent="."]
+texture_filter = 1
+material = SubResource("ShaderMaterial_nfmdl")
+texture = ExtResource("1_hpnnb")
+offset = Vector2(0, -16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_6h2yr")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_vwo6y")
+
+[node name="AStarAgent" type="Node2D" parent="."]
+script = ExtResource("4_k51fu")
+_mode = 1
+coordinates = Array[Vector2i]([Vector2i(0, 0)])
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_body_exited"]

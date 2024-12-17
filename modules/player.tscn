@@ -1,0 +1,134 @@
+[gd_scene load_steps=18 format=3 uid="uid://d34wbw00crsqs"]
+
+[ext_resource type="Texture2D" uid="uid://fibedao7oqot" path="res://assets/shadow.png" id="1_ro21p"]
+[ext_resource type="Script" path="res://modules/player.gd" id="1_wsljf"]
+[ext_resource type="Shader" path="res://shaders/character.gdshader" id="3_k3w28"]
+[ext_resource type="Script" path="res://scripts/tile_detector.gd" id="5_0yll3"]
+[ext_resource type="FontFile" uid="uid://dti01c1qmahf1" path="res://assets/fonts/vonwaon_bitmap-12px.ttf" id="6_o7302"]
+[ext_resource type="Texture2D" uid="uid://djfsbbaouh6vm" path="res://assets/characters/player/player.png" id="6_rtv72"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_j6r8e"]
+radius = 3.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ouh5f"]
+shader = ExtResource("3_k3w28")
+shader_parameter/water_color = Color(0, 0.611607, 1, 1)
+shader_parameter/water_edge_color = Color(1, 1, 1, 1)
+shader_parameter/water_edge_width = 1.0
+shader_parameter/water_depth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_03poj"]
+atlas = ExtResource("6_rtv72")
+region = Rect2(0, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ksc6y"]
+atlas = ExtResource("6_rtv72")
+region = Rect2(32, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_monfn"]
+atlas = ExtResource("6_rtv72")
+region = Rect2(64, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_72mpb"]
+atlas = ExtResource("6_rtv72")
+region = Rect2(96, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e0wfe"]
+atlas = ExtResource("6_rtv72")
+region = Rect2(128, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ihph7"]
+atlas = ExtResource("6_rtv72")
+region = Rect2(160, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fb1vi"]
+atlas = ExtResource("6_rtv72")
+region = Rect2(192, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6gnh7"]
+atlas = ExtResource("6_rtv72")
+region = Rect2(224, 0, 32, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_4wvc3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_03poj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ksc6y")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_monfn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_72mpb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e0wfe")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ihph7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fb1vi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6gnh7")
+}],
+"loop": true,
+"name": &"run",
+"speed": 10.0
+}]
+
+[node name="Player" type="CharacterBody2D"]
+collision_mask = 4
+script = ExtResource("1_wsljf")
+
+[node name="TileDetector" type="Node2D" parent="."]
+script = ExtResource("5_0yll3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_j6r8e")
+
+[node name="Line2D" type="Line2D" parent="."]
+top_level = true
+width = 2.0
+default_color = Color(1, 0, 0, 1)
+
+[node name="Body" type="Node2D" parent="."]
+
+[node name="Shadow" type="Sprite2D" parent="Body"]
+texture_filter = 1
+scale = Vector2(0.5, 0.2)
+texture = ExtResource("1_ro21p")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Body"]
+texture_filter = 1
+material = SubResource("ShaderMaterial_ouh5f")
+scale = Vector2(0.8, 0.8)
+sprite_frames = SubResource("SpriteFrames_4wvc3")
+animation = &"run"
+autoplay = "idle"
+frame_progress = 0.083007
+offset = Vector2(0, -32)
+
+[node name="Label" type="Label" parent="Body"]
+texture_filter = 1
+offset_left = -50.0
+offset_top = -55.0
+offset_right = 50.0
+offset_bottom = -47.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.169643, 0.169643, 0.169643, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("6_o7302")
+theme_override_font_sizes/font_size = 8
+horizontal_alignment = 1
+
+[connection signal="tile_change" from="TileDetector" to="." method="_on_tile_detector_tile_change"]

@@ -1,0 +1,117 @@
+[gd_scene load_steps=17 format=3 uid="uid://sqjhg6q65unh"]
+
+[ext_resource type="Texture2D" uid="uid://fibedao7oqot" path="res://assets/shadow.png" id="1_1rsgj"]
+[ext_resource type="Script" path="res://modules/enemy.gd" id="1_dbkou"]
+[ext_resource type="Shader" path="res://shaders/character.gdshader" id="2_10d18"]
+[ext_resource type="Texture2D" uid="uid://chxs84wgtxo56" path="res://assets/characters/enemy/enemy.png" id="3_ji4b7"]
+[ext_resource type="Script" path="res://scripts/tile_detector.gd" id="5_e64d3"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_67qcl"]
+resource_local_to_scene = true
+shader = ExtResource("2_10d18")
+shader_parameter/water_color = Color(0, 0.611607, 1, 1)
+shader_parameter/water_edge_color = Color(1, 1, 1, 1)
+shader_parameter/water_edge_width = 1.0
+shader_parameter/water_depth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lxagy"]
+atlas = ExtResource("3_ji4b7")
+region = Rect2(0, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6b1bg"]
+atlas = ExtResource("3_ji4b7")
+region = Rect2(32, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pjel8"]
+atlas = ExtResource("3_ji4b7")
+region = Rect2(64, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7wvm6"]
+atlas = ExtResource("3_ji4b7")
+region = Rect2(96, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i3ixn"]
+atlas = ExtResource("3_ji4b7")
+region = Rect2(128, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c363a"]
+atlas = ExtResource("3_ji4b7")
+region = Rect2(160, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2l6jr"]
+atlas = ExtResource("3_ji4b7")
+region = Rect2(192, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xxut5"]
+atlas = ExtResource("3_ji4b7")
+region = Rect2(224, 0, 32, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_yfwc5"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lxagy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6b1bg")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pjel8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7wvm6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i3ixn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c363a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2l6jr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xxut5")
+}],
+"loop": true,
+"name": &"run",
+"speed": 10.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gjxv7"]
+radius = 3.2
+
+[node name="Enemy" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("1_dbkou")
+
+[node name="Body" type="Node2D" parent="."]
+
+[node name="Shadow" type="Sprite2D" parent="Body"]
+texture_filter = 1
+scale = Vector2(0.5, 0.2)
+texture = ExtResource("1_1rsgj")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Body"]
+texture_filter = 1
+material = SubResource("ShaderMaterial_67qcl")
+scale = Vector2(0.8, 0.8)
+sprite_frames = SubResource("SpriteFrames_yfwc5")
+animation = &"idle"
+autoplay = "idle"
+frame_progress = 0.539762
+offset = Vector2(0, -32)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_gjxv7")
+
+[node name="TileDetector" type="Node2D" parent="."]
+script = ExtResource("5_e64d3")
+
+[connection signal="tile_change" from="TileDetector" to="." method="_on_tile_change"]
