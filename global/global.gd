@@ -101,6 +101,29 @@ func get_astar_path(start: Vector2, end: Vector2) -> PackedVector2Array:
 ## 注意这个id不能是一个负数，所以生成这个id的要求是，同一个坐标生成的id必须一样，
 ## 不同坐标生成的id必须不一样（在A*中id不能重复），id必须是大于或等于0的整数
 
+## 此算法由B站的一位网友提供
+
+func get_astar_id(global_tile_coords: Vector2i) -> int:
+    
+    var x = 2 * global_tile_coords.x if global_tile_coords.x >= 0 else -2 * global_tile_coords.x - 1
+    var y = 2 * global_tile_coords.y if global_tile_coords.y >= 0 else -2 * global_tile_coords.y - 1
+
+    @warning_ignore("integer_division")
+    
+    return (x + y) * (x + y + 1) / 2 + y
+
+## ----- 下面这个也可以实现 ----- >>>
+
+## 使用全局瓷砖坐标获取A*的点id
+
+## 每一个瓷砖都在A*中表示一个点，
+## 将这些点连接就形成了路径，
+## 在A*中每添加一个点就需要一个对应的id，
+## 只有使用这个id才能获取或设置点的属性，
+## 计算路线也需要提供起点和终点id，所以这个id非常重要，
+## 注意这个id不能是一个负数，所以生成这个id的要求是，同一个坐标生成的id必须一样，
+## 不同坐标生成的id必须不一样（在A*中id不能重复），id必须是大于或等于0的整数
+
 ## 在Godot中整数二维向量的x和y都各占用32位，而整数是占用64位，
 ## 我们可以使用整数的前32位存储x，后32位存储y，得到的新整数用作id，
 ## 但这样做的前提是这个x和y不能是负数，因为要进行位运算并且id本身不能是负数，
@@ -112,16 +135,16 @@ func get_astar_path(start: Vector2, end: Vector2) -> PackedVector2Array:
 ## 是的，0,0坐标和100000,100000坐标得到的id是一样的，但是我们每次加载的瓷砖是有限的，换句话说，当我们加载100000,100000处的瓷砖时，0,0处的瓷砖早就被卸载了，
 ## 所以此时100000,100000坐标的id在A*中就是唯一的！
 
-func get_astar_id(global_tile_coords: Vector2i) -> int:
+# func get_astar_id(global_tile_coords: Vector2i) -> int:
 
-    # 将x和y控制在0到100000之间
-    var coords := Vector2i(wrapi(global_tile_coords.x,0,100000),wrapi(global_tile_coords.y,0,100000))
+#     # 将x和y控制在0到100000之间
+#     var coords := Vector2i(wrapi(global_tile_coords.x,0,100000),wrapi(global_tile_coords.y,0,100000))
 
-    # 将整数的前32位存储x，后32位存储y
-    var id := 0 | coords.x
-    id <<= 32
-    id |= coords.y
+#     # 将整数的前32位存储x，后32位存储y
+#     var id := 0 | coords.x
+#     id <<= 32
+#     id |= coords.y
 
-    return id
+#     return id
 
 # -------------------------------------------------------------------------------------------------------->>>

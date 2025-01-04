@@ -113,12 +113,12 @@ var _thread_exit := false
 var _semaphore := Semaphore.new()
 # 区块数据，键是区块坐标，值是区块数据
 var _blocks_data := {}
-# 区块数据互拆锁
+# 区块数据互斥锁
 var _data_mutex := Mutex.new()
 
 # 更新队列
 var _update_queue := []
-# 更新队列互拆锁
+# 更新队列互斥锁
 var _mutex := Mutex.new()
 
 ## 目标位置，使用这个位置进行区块加载
@@ -427,7 +427,7 @@ func _update_block() -> void:
 		_initial_blocks = load_arr.duplicate()
 		_initialize = false
 
-	# 将更新信息添加到更新队列中，这个队列会同时被主线程和子线程修改，需要互拆锁
+	# 将更新信息添加到更新队列中，这个队列会同时被主线程和子线程修改，需要互斥锁
 	_mutex.lock()
 	_update_queue.append(dict)
 	_mutex.unlock()

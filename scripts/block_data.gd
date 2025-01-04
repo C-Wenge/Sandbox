@@ -26,7 +26,7 @@ extends Resource
 
 ## 更新的数据，一旦将need_update设置为true，后续对数据的修改都会存储在这个里面，区块节点会使用它来更新，而不是更新所有的数据
 var update_data :Array[Dictionary] = []
-## 更新数据的互拆锁，因为他会被多个线程同时修改
+## 更新数据的互斥锁，因为他会被多个线程同时修改
 var update_mutex := Mutex.new()
 
 ## 构建区块数据，提供层的数量
